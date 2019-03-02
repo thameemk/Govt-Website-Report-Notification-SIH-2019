@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+
+{% load staticfiles %}
+
+<head>
+    <title>Smart INDIA</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <link rel="icon" sizes="128x128" href="{% static 'main_website/images/logo.png' %}">
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+    <!--<link rel="stylesheet" href="{% static 'main_website/css/app7cf6.css' %} ">-->
+    <!--<script src="{% static 'main_website/js/app7833.js' %} " type="javascript"></script>-->
+    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">-->
+    <!--<link rel="stylesheet" type="text/css" href="{% static 'main_website/css/new.css' %} ">-->
+    <!--<link rel="stylesheet" type="text/css" href="{% static 'main_website/css/button.css'%} ">-->
+    <!--<link rel="stylesheet" type="text/css"-->
+          <!--href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/components/accordion.min.css">-->
+    
+    <meta name="csrf_token" content="{{ csrf_token }}">
+    <!-- <link rel="stylesheet" type="text/css" href="css/new.scss"> -->
+
+</head>
+
+<body>
+<header role="banner" class="navbar navbar-fixed-top navbar-static">
+    <div class="container">
+        <div class="navbar-header">
+            <a data-toggle="collapse-side" data-target=".side-collapse" data-target-2=".side-collapse-container">
+                <button type="button" class="navbar-toggle pull-right collapsed" data-toggle="collapse"
+                        data-target="#navbar" data-target-2=".side-collapse-container" data-target-3=".side-collapse"
+                        aria-expanded="false" aria-controls="navbar">
+
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar top-bar"></span>
+                    <span class="icon-bar middle-bar"></span>
+                    <span class="icon-bar bottom-bar"></span>
+
+                </button>
+            </a>
+            <div class="navbar-brand"><a href="/home"><img src="{% static 'main_website/images/logo1.png' %}"
+                                                           width="232px" height="50px" alt=""></a></div>
+        </div>
+
+        <div class="side-collapse in">
+            <nav id="navbar" role="navigation" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="hidden">
+                        <a href="#page-top"></a>
+                    </li>
+                    <li>
+                        <a href="/home" class="btn-menu2">
+                            <p>Home</p>
+                            <div class="crta"></div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/dashboard" class="btn-menu2">
+                            <p>Dashboard</p>
+                            <div class="crta"></div>
+                        </a>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#section3" class="menuitm btn-menu2" data-toggle="dropdown">
+                            <p>हिंदी</p>
+                            <div class="crta"></div>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Documentation</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</header>
+
+<div class="wrapper">
+    <div class="container-fluid hero">
+        <div class="container">
+            <div class="row bring-to-top">
+                <div class="col-md-12" style="margin-bottom:50px">
+                    <h1>The Government <span>Database</span></h1>
+                    <p style="margin-top: inherit;">Our goal is to make web data extraction easy and accessible for
+                        everyone.</p><br><br>
+
+                    <form method="POST" action="/search/">
+                        {% csrf_token %}
+                        <input class="input_area shadow" type="text" name="search_term" placeholder="Search">
+                        <select name="department" class="input_area1 shadow">
+                            <option value="">Select Department</option>
+                            <option value="all" selected>All</option>
+                            <option value="mhrd">MHRD</option>
+                            <option value="railway">Railway</option>
+                            <option value="army">Indian Army</option>
+                        </select>
+                        <input class="button shadow" type="submit" name="submit">
+                    </form>
+
+                </div>
+            </div>
+
+            {% if db_file_name %}
+            <div style="margin-bottom:10px;">
+                <p style="margin-bottom:5px;font-size:17px;display:contents;">13,628 Results in 0.112 seconds</p>
+
+                <select name="department" class="input_area2 shadow" style="margin-left:650px;">
+                    <option value="all" selected>50</option>
+                    <option value="mhrd">100</option>
+                    <option value="railway">200</option>
+                    <option value="army">500</option>
+                </select>
+
+            </div>
+            {% endif %}
+
+
+            <!-- Multiple show boxes -->
+            {% if db_file_name %}
+
+            {% for i in n %}
+            <div id="results_block{{ forloop.counter }}" class="bg-gray pb-5 pt-5 pl-4 pr-4 rounded polaroid">
+                <div class="userinfo1 inline">
+                </div>
+                <div class="inline">
+                    <h2 class="font-weight-light inline" style="padding-left:20px;">{{ db_file_name }}</h2><br>
+                    <h5 style="font-weight: bold;padding-left:20px">{{ db_department }}</h5>
+                    <h6 style="color:red;padding-left: 20px;">{{ db_site_pdf_url }}</h6>
+                </div>
+                <br>
+
+                <a href="{{ db_pdf_download_link }}"><i
+                        class="btn btn-primary ml-sm-3 mr-3 mr-sm-0 mt-3 mt-sm-0  inline"
+                        style="margin-left:300px;font-style: inherit;">Download File</i></a>
+                <a href="mailto:#">
+                    <button title="Send to mail" class="btn" style="margin-left:90px;"><i class="fa fa-envelope"></i>
+                    </button>
+                </a>
+                <a href="">
+                    <button class="btn" style="margin-left:1px;" title="Send to mobile app"><i class="fa fa-bell" aria-hidden="true"></i>
+                    </button>
+                </a>
+            </div>
+            <hr>
+            {% endfor %}
+            {% endif %}
+
+
+        </div>
+
+        <!-- <img src="img/imghero.png" class="imghero" alt=""> -->
+
+    </div>
+
+</div>
+
+<!--<script src="js/jquery-3.3.1.min.js" type="javascript"></script>-->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/components/accordion.js"></script>-->
+</body>
+
+</html>

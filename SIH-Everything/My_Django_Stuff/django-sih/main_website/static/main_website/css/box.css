@@ -1,0 +1,31 @@
+.trips-body .trips-row {
+    margin: 8px 0;
+    padding: 2px;
+    border: 1px solid #dcdce0;
+    border-top: 0;
+    border-bottom: 0;
+    background: #fff;
+    box-shadow: 1px 0 2px 0 rgba(201,201,201,.5);
+}
+.trips-body .col, .trips-body .row {
+    margin: 0;
+    padding: 0;
+}
+.d-flex {
+    display: -ms-flexbox!important;
+    display: flex!important;
+}
+.d-none {
+    display: none!important;
+}
+.row {
+    display: -ms-flexbox;
+    display: flex;
+    margin-right: -15px;
+    margin-left: -15px;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
+*, ::after, ::before {
+    box-sizing: border-box;
+}

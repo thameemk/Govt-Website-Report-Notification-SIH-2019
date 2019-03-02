@@ -1,0 +1,5 @@
+XSym
+0075
+00cc93faabede5801b05bd3e6edb2a6c
+/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/copy_reg.py
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    

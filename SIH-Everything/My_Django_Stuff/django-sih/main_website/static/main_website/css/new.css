@@ -1,0 +1,137 @@
+.bg-gray {
+background-color: #f4f7fe;
+color: #444444;
+}
+.rounded {
+overflow: hidden;
+}
+.shadow {
+box-shadow: 0 0.3125rem 0.875rem 0 rgba(129, 129, 129, 0.2) !important;
+}
+.pb-5, .py-5 {
+padding-bottom: 4px!important;
+}
+.pt-5, .py-5 {
+padding-top: 10px!important;
+}
+.pl-4, .px-4 {
+padding-left: 1.5rem!important;
+}
+.pr-4, .px-4 {
+padding-right:
+}
+.font-weight-light {
+/* font-weight: 300!important; */
+font-size: 25px;
+margin-top: 0.3rem;
+font-weight: bold;
+}
+
+
+@import url('https://fonts.googleapis.com/css?family=Ubuntu:400,700');
+.userinfo{
+   width:100%;
+   margin: 0px;
+   padding: 10px;
+   height: 100px;
+   background: #f3f3f3;
+   font-family: 'Ubuntu', sans-serif;
+    text-align: justify;
+ }
+ .userinfo1{
+    width:25%;
+    margin: 0px;
+    padding: 10px;
+    height: 80px;
+    background: #EFE7E7;
+    font-family: 'Ubuntu', sans-serif;
+     text-align: justify;
+      /* display:inline; */
+  }
+  .userinfo2{
+     width:75%;
+     margin: 0px;
+     padding: 10px;
+     height: 80px;
+     background: #EFE7E7;
+     font-family: 'Ubuntu', sans-serif;
+      text-align: justify;
+   }
+
+   div.polaroid {
+  /* width: 250px; */
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  /* text-align: center; */
+}
+
+
+   .shadow{
+     -moz-box-shadow: -5px -5px 5px #888;
+-webkit-box-shadow: -5px -5px 5px #888;
+box-shadow: -5px -5px 5px #888;
+   }
+/* .shadow {
+  -moz-box-shadow:    1px 1px 2px 3px #FAFAFA;
+  -webkit-box-shadow: 1px 1px 2px 3px #FAFAFA;
+  box-shadow:         1px 1px 2px 3px #FAFAFA;
+} */
+.input_area {
+  -webkit-transition: width 0.4s ease-in-out;
+  transition: width 0.4s ease-in-out;
+  width: 48%;
+  border: 2px solid blue;
+  border-radius: 4px;
+  height: 50px;
+  padding-left: 25px;
+}
+.input_area1 {
+  -webkit-transition: width 0.4s ease-in-out;
+  transition: width 0.4s ease-in-out;
+  width: 20%;
+  border: 2px solid blue;
+  border-radius: 4px;
+  height: 50px;
+  padding-left: 25px;
+}
+.button {
+  background-color: blue;
+
+  border: none;
+  color: white;
+  border-radius: 12px;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+.inline {
+/* display: inline-block; */
+float: left;
+/* border: 1px solid red; */
+/* margin:10px; */
+}
+/* Red */
+.button4 {
+background-color: #51BFFF;;
+
+border: none;
+color: white;
+border-radius: 12px;
+padding: 15px 32px;
+text-align: center;
+text-decoration: none;
+display: inline-block;
+font-size: 16px;
+}
+.input_area2 {
+  -webkit-transition: width 0.4s ease-in-out;
+  transition: width 0.4s ease-in-out;
+  width: 15%;
+  border: 1px solid black;
+  border-radius: 4px;
+  height: 30px;
+  padding-left: 5px;
+}
+
+/*  */

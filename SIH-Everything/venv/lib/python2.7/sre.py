@@ -1,0 +1,5 @@
+XSym
+0070
+0c7ced345c423254f340d14410b99f50
+/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/sre.py
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
