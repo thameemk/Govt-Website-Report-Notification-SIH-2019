@@ -23,4 +23,8 @@ urlpatterns = [
     url(r'^search/$', v1.searchFile, name='search'),
     url(r'^dashboard/$', v1.showDashboard, name='dashboard'),
     url(r'^add/$', v1.showDashboard, name='add'),
+    url(r'^update/$', v1.update, name='update'),
+    url(r'^api/send1$', v1.send1, name='update'),
+    url(r'^api/send2$', v1.send1, name='update'),
+    url(r'^update2/$', v1.update2, name='update2'),
 ]

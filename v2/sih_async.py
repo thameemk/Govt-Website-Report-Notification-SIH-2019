@@ -32,7 +32,7 @@ logging.getLogger("chardet.charsetprober").disabled = True
 
 HREF_RE = re.compile(r'href="(.*?)"')
 
-new_links = [];
+new_links = []
 pdf_links = []
 
 not_url = ['/', '#', 'javascript:void(0)']
@@ -62,7 +62,6 @@ except sqlite3.OperationalError as e:
 
 
 def some_function(i):
-    global new_links
     if (i not in new_links):
         print("[-] New links found!!!..." + i)
         with open("new_urls.txt", "a") as f:

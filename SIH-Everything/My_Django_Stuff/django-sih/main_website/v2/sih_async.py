@@ -2,7 +2,7 @@
 
 """Asynchronously get links embedded in multiple pages' HMTL."""
 
-def asyncScraping():
+def asyncScraping(url):
     import asyncio
     import logging
     import re
@@ -22,16 +22,17 @@ def asyncScraping():
     import sqlite3
     import pathlib
 
+    from . import mail_sender
+
     assert sys.version_info >= (3, 7), "Script requires Python 3.7+."
     here = pathlib.Path(__file__).parent
 
-    with open(here.joinpath("new_urls.txt")) as infile:
+    # url = 'http://mhrd.gov.in/'
+    domain = urlparse(url).netloc
+
+    outpath = here.joinpath("new_urls_%s" % (domain))
+    with open(here.joinpath("new_urls_%s.txt" % (domain))) as infile:
         urls = set(map(str.strip, infile))
-
-    new_links = list(urls)
-    # print(new_links)
-
-    outpath = here.joinpath("new_urls.txt")
 
     logging.basicConfig(
         format="%(asctime)s %(levelname)s:%(name)s: %(message)s",
@@ -39,21 +40,19 @@ def asyncScraping():
         datefmt="%H:%M:%S",
         stream=sys.stderr,
     )
-    logger = logging.getLogger("areq")
+
+    logger = logging.getLogger('chardet.charsetprober')
+    logger.setLevel(logging.INFO)
     logging.getLogger("chardet.charsetprober").disabled = True
 
     HREF_RE = re.compile(r'href="(.*?)"')
 
-    new_links = [];
+    # new_links = []
+    # previous_links = []
     pdf_links = []
 
     not_url = ['/', '#', 'javascript:void(0)']
-    file_types = ['.pdf', '.doc', '.docx', '.xlxs', '.PDF']
-    not_file_types = ['.mp3', '.jpg', '.png', '.ppt', '.pptx', '.JPG']
-
-    url = 'https://www.paavam.com'
-    # url = 'http://mhrd.gov.in/'
-    domain = urlparse(url).netloc
+    file_types = ['.pdf', '.PDF']
 
     here = pathlib.Path(__file__).parent
     outpath = here.joinpath("govt_db.db")
@@ -69,22 +68,23 @@ def asyncScraping():
             pdf_links.append(list(data[i])[0])
 
         print(pdf_links)
+
     except sqlite3.OperationalError as e:
         print('[-] Sqlite operational error: {} Retrying...'.format(e))
 
-
     def some_function(i):
-        if (i not in new_links):
+        if (i not in pdf_links):
             print("[-] New links found!!!..." + i)
-            with open(here.joinpath("new_urls.txt"), "a") as f:
+            with open(here.joinpath("new_urls_%s.txt" % (domain)), "a") as f:
                 f.write(f"{i}\n")
             print("Wrote results for source URL: %s" % (i))
 
     def extractLinks(content, new_url):
-        flag = 1
+        print("I am here teena 1")
         dom = lxml.html.fromstring(content.encode("utf8"))
         # print("" + new_url + " : " + str(len(dom.xpath('//a/@href'))))
         for link in dom.xpath('//a/@href'):
+            print("I am here teena 2")
             # retun if '#' and links
             if (link not in not_url):
                 # convert '/gallery' to full link "https://../gallery"
@@ -93,29 +93,23 @@ def asyncScraping():
 
                 # check for same domain links
                 if (urlparse(link).netloc == domain):
+                    print("I am here teena 3")
                     # removing link parameters
-                    if ('#' in link or '?' in link or '&' in link):
-                        link = urljoin(url, urlparse(link).path)
+                    # if ('#' in link or '?' in link or '&' in link):
+                    #     link = urljoin(url, urlparse(link).path)
 
                     for file_type in file_types:
                         if (file_type in link and link not in pdf_links):
                             if (requests.get(link).status_code != 404):
                                 pdf_links.append(link)
                                 # Insert a row of data and commit
-                                c.execute("INSERT INTO " + domain.replace('.', '_') + " (urls, file_name) VALUES (?,?)",
-                                          (link, unquote(link).split("/")[-1]))
+                                c.execute("INSERT INTO " + domain.replace('.',
+                                                                          '_') + " (urls, file_name,source_url) VALUES (?,?,?)",
+                                          (link, unquote(link).split("/")[-1], new_url))
+                                some_function(link)
+                                mail_sender.sendMailMultiple(link, unquote(link).split("/")[-1])
                                 print("blahhhed: " + link)
-                            else:
-                                flag = 0
-
-                    if (link not in new_links and link not in pdf_links):
-                        for not_file_type in not_file_types:
-                            if (not_file_type in link):
-                                flag = 0
-
-                        if (flag and link not in new_links):
-                            some_function(link)
-                            new_links.append(link)
+                                print("I am here teena 4")
 
     async def fetch_html(url: str, session: ClientSession, **kwargs) -> str:
         """GET request wrapper to fetch page HTML.
@@ -123,10 +117,9 @@ def asyncScraping():
         """
         resp = await session.request(method="GET", url=url, **kwargs)
         resp.raise_for_status()
-        # logger.info("Got response [%s] for URL: %s", resp.status, url)
+        logger.info("Got response [%s] for URL: %s", resp.status, url)
         html = await resp.text()
         return html
-
 
     async def parse(url: str, session: ClientSession, **kwargs) -> set:
         """Find HREFs in the HTML of `url`."""
@@ -155,7 +148,6 @@ def asyncScraping():
             # logger.info("new_links increased to %d for %s", len(new_links), url)
             return set(new_links)
 
-
     async def write_one(file: IO, url: str, **kwargs) -> None:
         """Write the found HREFs from `url` to `file`."""
         res = await parse(url=url, **kwargs)
@@ -172,5 +164,6 @@ def asyncScraping():
                 )
             await asyncio.gather(*tasks)
 
-    asyncio.run(bulk_crawl_and_write(file=outpath, urls=urls))
+    while(1):
+        asyncio.run(bulk_crawl_and_write(file=outpath, urls=urls))
     conn.commit()

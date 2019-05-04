@@ -1,8 +1,10 @@
-https://sreekant.me
+https://sreekant.me#content
 https://sreekant.me/
 https://sreekant.me/2019/01/25/hello-world/
 https://sreekant.me/author/geekykant/
 https://sreekant.me/category/uncategorized/
+https://sreekant.me/2019/01/25/hello-world/#comments
+https://sreekant.me/2019/01/25/hello-world/#comment-1
 https://sreekant.me/2019/01/
 https://sreekant.me/wp-login.php
 https://sreekant.me/feed/

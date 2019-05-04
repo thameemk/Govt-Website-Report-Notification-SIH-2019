@@ -1,3 +1,7 @@
+## TODO: Add new column A Tag Text()
+# lxml.html.fromstring("<a><p>asdasbkjhkjbjkh</p></a>").xpath('//a/text()')
+
+
 def startSyncScraping(url):
     from urllib.parse import urlparse, urljoin, unquote
     import requests
@@ -9,18 +13,11 @@ def startSyncScraping(url):
     import aiofiles
     import asyncio
 
-    # import psycopg2
-
-    new_links = [];
-    visited_links = [];
     pdf_links = []
 
     not_url = ['/', '#', 'javascript:void(0)']
-    file_types = ['.pdf', '.doc', '.docx', '.xlxs', '.PDF']
-    not_file_types = ['.mp3', '.jpg', '.png', '.ppt', '.pptx', '.JPG']
+    file_types = ['.pdf', '.PDF']
 
-    # url = 'https://www.paavam.com'
-    # url = 'http://mhrd.gov.in/'
     domain = urlparse(url).netloc
 
     here = pathlib.Path(__file__).parent
@@ -29,21 +26,27 @@ def startSyncScraping(url):
     conn = sqlite3.connect(str(outpath))
     c = conn.cursor()
 
+    print("THis is the eeror")
+    print("URL: " + url)
+    print("CREATE TABLE {url} (urls TEXT UNIQUE, file_name TEXT, source_url TEXT);".format(
+        url=domain.replace('.', '_')))
+
     # Create table
     try:
-        c.execute("CREATE TABLE {url} (urls TEXT, file_name TEXT);".format(
+        c.execute("CREATE TABLE {url} (urls TEXT UNIQUE, file_name TEXT, source_url TEXT);".format(
             url=domain.replace('.', '_')))
+
     except sqlite3.OperationalError as e:
         c.execute("DROP TABLE {url};".format(url=domain.replace('.', '_')))
-        c.execute("CREATE TABLE {url} (urls, file_name TEXT);".format(
+        c.execute("CREATE TABLE {url} (urls TEXT UNIQUE, file_name TEXT, source_url TEXT);".format(
             url=domain.replace('.', '_')))
         print('[-] Sqlite operational error: {} Retrying...'.format(e))
 
-    with open(here.joinpath("new_urls.txt"), "w") as outfile:
+    with open(here.joinpath("new_urls_%s.txt" % (domain)), "w") as outfile:
         outfile.write("")
 
     async def some_function(i):
-        async with aiofiles.open(here.joinpath("new_urls.txt"), "a") as f:
+        async with aiofiles.open(here.joinpath("new_urls_%s.txt" % (domain)), "a") as f:
             await f.write(f"{i}\n")
             print("Wrote results for source URL: %s" % (i))
             pass
@@ -52,7 +55,6 @@ def startSyncScraping(url):
         content = requests.get(new_url).content
 
         def extractLinks(content):
-            flag = 1
             dom = lxml.html.fromstring(content)
             # print("" + new_url + " : " + str(len(dom.xpath('//a/@href'))))
             for link in dom.xpath('//a/@href'):
@@ -65,43 +67,34 @@ def startSyncScraping(url):
                     # check for same domain links
                     if (urlparse(link).netloc == domain):
                         # removing link parameters
-                        if ('#' in link or '?' in link or '&' in link):
+                        if ('#' in link):
+                            # if ('#' in link or '?' in link):
                             link = urljoin(url, urlparse(link).path)
 
                         for file_type in file_types:
                             if (file_type in link and link not in pdf_links):
                                 if (requests.get(link).status_code != 404):
                                     pdf_links.append(link)
+                                    asyncio.run(some_function(link))
                                     # Insert a row of data and commit
-                                    # c.execute("INSERT INTO " + url + " (sub_url, file_name) VALUES ('http://www.google.com','aaa');")
                                     c.execute(
-                                        "INSERT INTO " + domain.replace('.', '_') + " (urls, file_name) VALUES (?,?)",
-                                        (link, unquote(link).split("/")[-1]))
+                                        "INSERT INTO {domain} (urls, file_name,source_url) VALUES (?,?,?)".format(
+                                            domain=domain.replace('.', '_')),
+                                        (link, unquote(link).split("/")[-1], new_url))
                                     conn.commit()
-                                else:
-                                    flag = 0
-
-                        if (link not in new_links and link not in pdf_links):
-                            for not_file_type in not_file_types:
-                                if (not_file_type in link):
-                                    flag = 0
-
-                            if (flag and link not in new_links):
-                                new_links.append(link)
-                                asyncio.run(some_function(link))
 
         extractLinks(content)
 
     # First scrape
     scrapeIt(url)
 
-    # Second time scrape
-    for i in new_links:
-        print(i + " : " + str(len(new_links)))
-        scrapeIt(i)
+    # # Second time scrape
+    # for i in new_links:
+    #     print(i + " : " + str(len(new_links)))
+    #     scrapeIt(i)
 
     print("completed!")
     if (conn):
         c.close()
         conn.close()
-        print("PostgreSQL connection is closed")
+        print("Sqlite connection is closed")

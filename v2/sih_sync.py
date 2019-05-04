@@ -65,8 +65,8 @@ def scrapeIt(new_url):
                 # check for same domain links
                 if (urlparse(link).netloc == domain):
                     # removing link parameters
-                    if ('#' in link or '?' in link or '&' in link):
-                        link = urljoin(url, urlparse(link).path)
+                    # if ('#' in link or '?' in link or '&' in link):
+                    #     link = urljoin(url, urlparse(link).path)
 
                     for file_type in file_types:
                         if (file_type in link and link not in pdf_links):
@@ -94,11 +94,12 @@ def scrapeIt(new_url):
 
 # First scrape
 scrapeIt(url)
+print(new_links)
 
 # Second time scrape
-for i in new_links:
-    print(i + " : " + str(len(new_links)))
-    scrapeIt(i)
+# for i in new_links:
+#     print(i + " : " + str(len(new_links)))
+#     scrapeIt(i)
 
 print("completed!")
 conn.close()

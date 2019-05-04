@@ -16,6 +16,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="{% static 'main_website/css/new.css' %} ">
     <link rel="stylesheet" type="text/css" href="{% static 'main_website/css/button.css'%} ">
+    <link rel="stylesheet" type="text/css" href="{% static 'main_website/css/signin.css'%}">
+    <link rel="stylesheet" type="text/css" href="{% static 'main_website/css/popup.css'%}">
     <link rel="stylesheet" type="text/css"
           href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/components/accordion.min.css">
 
@@ -62,15 +64,27 @@
                             <div class="crta"></div>
                         </a>
                     </li>
-                    <li class="dropdown">
-                        <a href="#section3" class="menuitm btn-menu2" data-toggle="dropdown">
-                            <p>हिंदी</p>
+
+                    <li>
+                        <a href="https://www.sreekant.me/wp-admin" class="btn-menu2"><p>LOGIN</p>
                             <div class="crta"></div>
                         </a>
-                        <ul class="dropdown-menu">
-                            <li><a href="#">Documentation</a></li>
-                        </ul>
                     </li>
+                    <!--<div id="popup1" class="overlay">-->
+                    <!--<div class="popup">-->
+                    <!--<h2 style="text-align:center">LOGIN </h2>-->
+                    <!--<a class="close" href="#">&times;</a>-->
+                    <!--<div class="content dev_field">-->
+                    <!--<form>-->
+                    <!--<b>Username:</b><br><br>-->
+                    <!--<input class="field1" type="text" name="username" placeholder="Username" required><br><br>-->
+                    <!--<b>Password:</b><br><br>-->
+                    <!--<input class="field1" type="password" name="password" placeholder="Password" required><br><br>-->
+                    <!--<input class="field2" type="button" name="sub" value="Submit">-->
+                    <!--</form>-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    <!--</div>-->
                 </ul>
             </nav>
         </div>
@@ -82,29 +96,63 @@
         <div class="container">
             <div class="row bring-to-top">
                 <div class="col-md-12" style="margin-bottom:50px">
-                    <h1>Add New <span>URL</span> to Database</h1>
-                    <p style="margin-top: inherit;">Our goal is to make web data extraction easy and accessible for
-                        everyone.</p><br><br>
+                    <h1>Add New <span>URL</span> to Track</h1>
+                    <p style="margin-top: inherit;">Our goal is to help DSDD officials get data notified easily.</p><br><br>
 
                     <form method="GET" action="/add/">
                         {% csrf_token %}
                         <input class="input_area shadow" type="text" name="url" placeholder="Input Website URL">
-                        <!--<select name="department" class="input_area1 shadow">-->
-                            <!--<option value="">Select Department</option>-->
-                            <!--<option value="all" selected>All</option>-->
-                            <!--<option value="mhrd">MHRD</option>-->
-                            <!--<option value="railway">Railway</option>-->
-                            <!--<option value="army">Indian Army</option>-->
-                        <!--</select>-->
                         <input class="button shadow" type="submit" name="submit">
                     </form>
 
                 </div>
             </div>
 
+            <!--{% if index_url_name %}-->
+            {% for index_url in index_url_name %}
+            <div id="results_block{{ forloop.counter }}" class="bg-gray pb-5 pt-5 pl-4 pr-4 rounded polaroid">
+                <!--<div class="userinfo1 inline" style="margin-bottom:13px">-->
+                <!--&lt;!&ndash;<embed src="{{ file_detail.db_pdf_download_link }}" width="200" height="375"&ndash;&gt;-->
+                <!--&lt;!&ndash;type="application/pdf">&ndash;&gt;-->
+                <!--</div>-->
+                <div class="inline">
+                    <h2 class="font-weight-light inline" style="float:left;padding:30px;font-size:18px">{{ index_url
+                        }}</h2>
+                    <br>
+                </div>
+                <br>
+
+                <form method="get" action="/update2/">
+                    <div><a href="{{ index_url }}"><i class="btn btn-primary ml-sm-3 mr-3 mr-sm-0 mt-3 mt-sm-0  inline"
+                                                      style="margin-left:100px;">Official Website</i></a></div>
+                    <div>
+                        <button class="btn" name="url" value="{{ update }}" style="margin-left:100px;"><i
+                                class="fa fa-refresh"></i>
+                        </button>
+
+                        <select onchange="this.form.submit()" name="period" class="input_area1 shadow"
+                                style="width:130px; display:inline">
+                            <option value="" selected>Periodic type...</option>
+                            <option value="realtime">Realtime</option>
+                            <option value="1hour">Once an Hour</option>
+                            <option value="24hours">Once a day</option>
+                            <option value="5days">Once in 5 days</option>
+                            <option value="1months">Once a Month</option>
+                            <option value="6months">Once in 6 Months</option>
+                            <option value="1year">Once a Year</option>
+                        </select>
+                    </div>
+
+                </form>
+            </div>
+            <hr>
+            {% endfor %}
+            {% endif %}
+
             {% if adding_url %}
             <div style="margin-bottom:10px;">
-                <p style="margin-bottom:5px;font-size:17px;display:contents;">Added <i>{{ adding_url }}</i> to database</p>
+                <p style="margin-bottom:5px;font-size:17px;display:contents;">Added <i>{{ adding_url }}</i> to database
+                </p>
             </div>
             {% endif %}
 
@@ -116,26 +164,26 @@
 
             <!--{% for i in n %}-->
             <!--<div id="results_block{{ forloop.counter }}" class="bg-gray pb-5 pt-5 pl-4 pr-4 rounded polaroid">-->
-                <!--<div class="userinfo1 inline">-->
-                <!--</div>-->
-                <!--<div class="inline">-->
-                    <!--<h2 class="font-weight-light inline" style="padding-left:20px;">{{ db_file_name }}</h2><br>-->
-                    <!--<h5 style="font-weight: bold;padding-left:20px">{{ db_department }}</h5>-->
-                    <!--<h6 style="color:red;padding-left: 20px;">{{ db_site_pdf_url }}</h6>-->
-                <!--</div>-->
-                <!--<br>-->
+            <!--<div class="userinfo1 inline">-->
+            <!--</div>-->
+            <!--<div class="inline">-->
+            <!--<h2 class="font-weight-light inline" style="padding-left:20px;">{{ db_file_name }}</h2><br>-->
+            <!--<h5 style="font-weight: bold;padding-left:20px">{{ db_department }}</h5>-->
+            <!--<h6 style="color:red;padding-left: 20px;">{{ db_site_pdf_url }}</h6>-->
+            <!--</div>-->
+            <!--<br>-->
 
-                <!--<a href="{{ db_pdf_download_link }}"><i-->
-                        <!--class="btn btn-primary ml-sm-3 mr-3 mr-sm-0 mt-3 mt-sm-0  inline"-->
-                        <!--style="margin-left:300px;font-style: inherit;">Download File</i></a>-->
-                <!--<a href="mailto:#">-->
-                    <!--<button title="Send to mail" class="btn" style="margin-left:90px;"><i class="fa fa-envelope"></i>-->
-                    <!--</button>-->
-                <!--</a>-->
-                <!--<a href="">-->
-                    <!--<button class="btn" style="margin-left:1px;" title="Send to mobile app"><i class="fa fa-bell" aria-hidden="true"></i>-->
-                    <!--</button>-->
-                <!--</a>-->
+            <!--<a href="{{ db_pdf_download_link }}"><i-->
+            <!--class="btn btn-primary ml-sm-3 mr-3 mr-sm-0 mt-3 mt-sm-0  inline"-->
+            <!--style="margin-left:300px;font-style: inherit;">Download File</i></a>-->
+            <!--<a href="mailto:#">-->
+            <!--<button title="Send to mail" class="btn" style="margin-left:90px;"><i class="fa fa-envelope"></i>-->
+            <!--</button>-->
+            <!--</a>-->
+            <!--<a href="">-->
+            <!--<button class="btn" style="margin-left:1px;" title="Send to mobile app"><i class="fa fa-bell" aria-hidden="true"></i>-->
+            <!--</button>-->
+            <!--</a>-->
             <!--</div>-->
             <!--<hr>-->
             <!--{% endfor %}-->
